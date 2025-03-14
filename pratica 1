@@ -1,0 +1,28 @@
+El mandato 1 es 
+
+Descargar la erramienta e instalarla
+
+Sudo dnf install gnupg2 -y
+
+Luego creamos una carpeta llamada
+
+Mkdir poleche
+ Entramos en ella. 
+
+Nano franela.txt
+
+Y dentro ponemos un mensaje. 
+
+gpg -c franela.txt
+
+Ponemos contraseña.  
+
+Intentamos aceder a la carpeta con
+
+Cat franela.txt.gpg
+
+Y para desifrarlo usamos 
+
+Ponemos 
+
+gpg -d franela.txt
