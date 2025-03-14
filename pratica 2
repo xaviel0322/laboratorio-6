@@ -1,0 +1,62 @@
+sudo systemctl stop firewalld
+
+sudo dnf install httpd vsftpd openssh-server -y
+
+sudo systemctl start httpd 
+sudo systemctl enable httpd 
+
+sudo systemctl start vsftpd 
+sudo systemctl enable vsftpd 
+
+sudo systemctl start sshd
+sudo systemctl enable sshd
+
+sudo systemctl status httpd
+sudo systemctl status vsftpd
+sudo systemctl status sshd
+
+sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 21 -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 22 -j ACCEPT
+
+sudo iptables -I INPUT -p tcp --dport 80 -j REJECT
+
+#POR SI PASA UN PROBLEMA 
+
+#BORRAR TODAS LAS REGLAS EN TODAS LAS CADENAS 
+sudo iptables -f
+
+#BORRAR TODAS LAS CADENAS DEFINIDAS POR EL USUARIO (SI LAS HAY)
+sudo iptables -x
+
+#RETABLECER LAS POLITICAS PREDETERMINADAS PARA TODAS LAS CADENAS A ACCEPT
+sudo iptables -p INPUT ACCEPT
+sudo iptables -p FORWARD ACCEPT
+sudo iptables -p OUTPUT ACCEPT
+
+sudo iptables -D INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -D INPUT -p tcp --dport 21 -j ACCEPT
+sudo iptables -D INPUT -p tcp --dport 22 -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 80 -j REJECT
+sudo iptables -I INPUT -p tcp --dport 21 -j REJECT
+sudo iptables -I INPUT -p tcp --dport 22 -j REJECT
+
+sudo iptables -D INPUT -p tcp --dport 80 -j REJECT
+sudo iptables -D INPUT -p tcp --dport 21 -j REJECT
+sudo iptables -D INPUT -p tcp --dport 22 -j REJECT
+sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 21 -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 22 -j ACCEPT
+
+sudo systemctl start firewalld
+sudo systemctl enable firewalld
+
+sudo firewall-cmd --zone=FedoraServer --remove-service=http --permanent
+sudo firewall-cmd --zone=FedoraServer --remove-service=ftp --permanent
+sudo firewall-cmd --zone=FedoraServer --remove-service=ssh --permanent
+sudo firewall-cmd --reload
+
+sudo firewall-cmd --zone=FedoraServer --add-service=http --permanent
+sudo firewall-cmd --zone=FedoraServer --add-service=ftp --permanent
+sudo firewall-cmd --zone=FedoraServer --add-service=ssh --permanent
+sudo firewall-cmd --reload
